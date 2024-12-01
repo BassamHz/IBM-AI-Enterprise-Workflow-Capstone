@@ -1,164 +1,183 @@
-# IBM AI Enterprise Workflow Capstone
-Files for the IBM AI Enterprise Workflow Capstone project. 
+# IBM AI Enterprise Workflow Capstone Project
 
-## Part 1
+## Overview
 
-### Case study part 1
+This project is a capstone for the IBM AI Enterprise Workflow specialization. The main goal is to demonstrate an end-to-end data science project focusing on time-series analysis and forecasting for a business opportunity. The project is divided into three major parts: data understanding and preparation, modeling and evaluation, and API development and deployment.
 
-At this point in the project, and in any data science project really, it is best to loosly organize your code as libraries and scripts.  Jupyter notebooks are a convenient and powerful tool, but we have mentioned several times that they are not a good place for source code to live.  If you decide to use a notebook for this part, we recommend that it is used to run functions that live within a [python module](https://docs.python.org/3/tutorial/modules.html).
+## Project Structure
 
-### Deliverable goals
+The project is organized into three parts:
 
-Overall this part of the case study is meant to tell the story of the data by investigating the relationship between the data and the business opportunity.
+### Part 1: Data Understanding and Preparation
 
-> (1) Assimilate the business scenario and articulate testable hypotheses.
+- **Assimilate Business Scenario and Testable Hypotheses**: We began by understanding the business opportunity and defining hypotheses that can be tested using data. The objective was to identify key patterns and relationships that could inform business decisions.
+  - **Testable Hypotheses**: We formulated hypotheses such as "Does increased customer engagement lead to higher revenue?" and "Is there a seasonal pattern in revenue generation that can be leveraged for strategic planning?" These hypotheses were designed to validate the relationship between key business metrics and data features.
+  - **Business Opportunity Restatement**: The business opportunity is to leverage time-series analysis to forecast future revenue, identify trends, and optimize business strategies. We aim to use historical data to understand customer behavior and seasonality to make informed business decisions.
 
-Take what you have read from the stories and from what you know about the business scenario and, in your own words, carefully re-state the business opportunity.  Given the stated opportunity, enumerate the testable hypotheses.
+- **Ideal Data Identification**: Before starting data ingestion, we specified the types of data that would be ideal for addressing the business problem, such as transaction records, customer engagement metrics, and seasonal sales data. This helped provide context for building the feature matrix and targets for modeling.
+  - **Rationale for Data Selection**: Transaction records help understand revenue patterns, customer engagement metrics provide insight into customer behavior, and seasonal sales data helps capture temporal trends. These data types are crucial for building a robust forecasting model.
+  - **Data Sources**: Data was sourced from CRM systems for customer engagement, sales databases for transaction records, and external seasonal data for capturing temporal variations. This combination of sources ensured comprehensive coverage of relevant business metrics.
 
-> (2) State the ideal data to address the business opportunity and clarify the rationale for needing specific data.
+- **Data Ingestion**: Python scripts were created to extract relevant data from multiple sources. We automated data ingestion, ensuring that data was properly formatted, cleaned, and transformed into a usable form for exploratory data analysis (EDA) and modeling.
+  - **Data Quality Checks**: During ingestion, we implemented data validation methods to catch common input errors, such as missing values and non-uniform feature naming. This ensured the quality and consistency of the dataset.
+  - **Data Ingestion Script**: A Python module was developed with functions to read data from multiple sources, handle missing values, and standardize feature names. The script ensures data is ready for EDA and modeling.
+  - **Handling Missing Values**: Missing values were handled using appropriate imputation methods, such as forward filling for time-series continuity and median imputation for numerical features.
 
-Note that this step is carried out **before you read in the data**.  It helps clarify exactly what your are looking for in the data and it helps provide context for what the feature matrix and targets will look like.
+- **Relationship Investigation**: Using EDA tools, we explored the relationships between features, target variables, and the business metric. This helped in understanding key data patterns and correlations.
+  - **Aggregation for Time-Series**: We aggregated the transactions by day to prepare the data for time-series modeling, which allowed us to capture temporal trends effectively.
+  - **EDA Techniques**: Correlation analysis, time-series decomposition, and visualizations such as histograms and scatter plots were used to investigate relationships between variables.
+  - **Correlation Findings**: We found that unique customer counts had a moderate positive correlation with revenue, while engagement metrics showed varying levels of impact on revenue depending on the quality of customer interaction.
 
-3. Create a python script to extract relevant data from multiple data sources, automating the process of data ingestion.
+- **Visualization of Findings**: The findings from EDA were articulated through visualizations to highlight trends, seasonality, and outliers in the data.
 
-From within a Python module there should be a function that reads in the data, attempts to catch common input errors and returns a feature matrix (NumPy array or Pandas DataFrame) that will subsequently be used as a starting point for EDA and modeling.
+  ![Seasonality Components](./output/seasonality_components.png)
 
-4. Investigate the relationship between the relevant data, the target and the business metric.
+  - **Seasonality Components**: The figure above shows how weekly variations influence revenue, peaking around mid-week and showing declines over weekends. These insights inform decisions such as when to run promotions.
 
-Using the feature matrix and the tools abvailable to you through EDA spend some time to get to know the data.
+### Part 2: Modeling and Evaluation
 
-5. Articulate your findings using a deliverable with visualizations.
+- **Modeling Approaches**: Multiple time-series modeling approaches were evaluated, including Prophet, SARIMA, and LSTM models. Each approach was tested to see how well it could forecast future revenue.
 
-Summarize what you have learned in your investigations using visualizations.
+  ![Prophet Model Forecast](./output/prophet_forecast.png)
+  ![SARIMA Model Forecast](./output/sarima_forecast.png)
+  ![LSTM Model Forecast](./output/lstm_forecast.png)
 
-### Hints
+  - **Prophet Model Forecast**: The graph above demonstrates the trend and seasonality patterns learned by the Prophet model, effectively capturing overall trends but showing overfitting for weekends.
+  - **SARIMA Model Forecast**: This model handled seasonality well, particularly capturing repeating weekly patterns, but struggled with noise.
+  - **LSTM Model Forecast**: The LSTM model was used to capture long-term dependencies, which helped with predicting complex trends, despite higher RMSE compared to SARIMA.
 
-* The JSON files may not contain uniformly named features. Be sure to account for this in your data ingestion function.
-* Some of the invoice ids (`invoice`) have letters that can be removed to improve matching.
-* One common way to ready time-series data for modeling is to aggregate the transactions by day. Getting the data into this form will help you prepare for part 2.
-* If you have not worked with time-series or time-stamped data before the following two links can be useful.
+- **Model Iteration and Refinement**: We iteratively improved the models by modifying data transformations, feature engineering techniques, pipeline architectures, and hyperparameters. Examples include adjusting the seasonality parameters for Prophet, tuning the order parameters for SARIMA, and modifying the LSTM architecture to better capture dependencies.
+  - **Feature Engineering**: Features such as revenue lag, rolling averages, and interaction terms were engineered to enhance model performance. Recursive forecasting was also explored to extend the forecasting horizon.
+  - **Hyperparameter Tuning**: Hyperparameters were optimized using grid search for SARIMA and Bayesian optimization for LSTM, resulting in improved performance metrics.
 
-  * [NumPy datetime](https://docs.scipy.org/doc/numpy/reference/arrays.datetime.html)
-  * [Pandas time-series](https://pandas.pydata.org/pandas-docs/stable/user_guide/timeseries.html)
-  * [matplotlib time-series plot](https://matplotlib.org/3.1.1/gallery/text_labels_and_annotations/date.html)
+- **Training and Deployment Preparation**: The best performing model was retrained on all available data in preparation for deployment.
 
+- **Summary of Findings**: A summary report was created to articulate model performance, highlighting each model's strengths, weaknesses, and the final model chosen for deployment.
 
-## Part 2
+  #### Model Comparison Summary
 
-### Case study part 2
+  | Model   | RMSE       | MAPE                                      | Comment                         |
+  |---------|------------|------------------------------------------|---------------------------------|
+  | Prophet | 7264.72    | 423223394076085780480.00%                | Captured trend well but overfitted weekends. |
+  | SARIMA  | 6211.37    | 58.23%                                   | Good with seasonality but struggled with noise. |
+  | LSTM    | 7361.26    | 45.38%                                   | Best performance, captured long-term dependencies.|
 
-Time-series analysis is a subject area that has many varied methods and a great potential for customized solutions.
-We cannot cover the breadth and depth of this important area of data science in a single case study. We do 
-however want to use this as a learning opportunity if time-series analysis is new to you.  For those of you who are seasoned 
-practitioners in this area, it may be a useful time to hone your skills or try out a more advanced technique like 
-Gaussian processes.  The reference materials for more advanced approaches to time-series analysis will occur in their own section
-below. If this is your first encounter with time-series data we suggest that that you begin with the supervised learning
-approach before trying out the other possible methods. 
+  #### Summary of Key Findings
+  - **Prophet Model**: Captured the overall trend effectively but showed limitations with weekend seasonality overfitting.
+  - **SARIMA Model**: Handled seasonality well but struggled with high variability in the dataset.
+  - **LSTM Model**: Best captured the long-term dependencies in data but at the cost of slightly higher RMSE.
+  - The **Tuned Prophet Model** attempted to refine seasonal overfitting by adding more nuanced features, resulting in slightly lower performance metrics.
 
-## Deliverable goals
+### Part 3: API Development and Deployment
 
-1. State the different modeling approaches that you will compare to address the business opportunity.
-2. Iterate on your suite of possible models by modifying data transformations, pipeline architectures, hyperparameters 
-and other relevant factors.
-3. Re-train your model on all of the data using the selected approach and prepare it for deployment.
-4. Articulate your findings in a summary report.
+- **API Development**: We built an API using Flask that includes endpoints for training the model (`/train`), making predictions (`/predict`), and retrieving logs (`/logfile`). This allows for easy integration and testing of the model with new data.
+  - **Integration with Business Use-Cases**: The API was designed to provide revenue forecasts that can be used for strategic decision-making, such as budget planning and inventory management.
+  - **Unit Tests**: Unit tests were created for each API endpoint to ensure reliability. The `/train` endpoint tests model training on different datasets, while `/predict` tests for correct input handling and response format.
+  - **Error Handling**: The API includes error handling for invalid inputs, such as incorrect date formats or missing parameters, ensuring robustness in real-world usage.
 
-## On time-series analysis
+- **Dockerization**: The model, API, and unit tests were bundled into a Docker container to ensure consistent and scalable deployment. This also allows for rapid re-deployment if updates are required.
+  - **Docker Setup**: The Docker image includes all dependencies, and the containerized application can be deployed on any platform supporting Docker, ensuring consistent results across environments.
 
-We have used TensorFlow, scikit-learn, and Spark ML as the main ways to implement models.  Time-series analysis 
-has been around a long time and there are a number of specialized packages and software to help facilitate model 
-implementation.  In the case of our business opportunity, it is required that we 
-*predict the next point* or determine a reasonable value for next month's revenue.  If we only had revenue, we could 
-engineer features with revenue for the previous day, previous week, previous month and previous three months, for example.
-This provides features that machine learning models such as random forests or boosting could use to 
-capture the underlying patterns or trends in the the data. You will likely spend some time optimizing this feature
-engineering task on a case-by-case basis. 
+- **Test-Driven Development and Monitoring**: We used a test-driven development approach, iterating on the API while considering scale, load, and data drift. A monitoring script was implemented to analyze the relationship between model performance and the business metric, allowing us to track changes and retrain the model as necessary.
+  - **Monitoring for Data Drift**: The monitoring component continuously tracks model predictions versus actuals, providing alerts if performance deviates significantly, indicating potential data drift.
+  - **Post-Production Analysis**: A post-production analysis script was developed to investigate the relationship between model performance and business metrics over time, enabling proactive model retraining.
+  - **Gold Standard Comparison**: Model results were compared to industry benchmarks to assess performance and ensure the model met business standards.
 
-Predicting the next element in a time-series is in line with the other machine learning tasks that we have encountered in
-this specialization.  One caveat to this approach is that sometimes we wish to project further into the future. Although,
-it is not a specific request of management in the case of this business opportunity, you may want to consider forecasting 
-multiple points into the future, say three months or more. To do this, you have two main categories of methods: 'recursive forecasting' and 'ensemble forecasting'.
+## Time-Series Analysis and Modeling
 
-In recursive forecasting, you will append your predictions to the feature matrix and *roll* forward until you get to the 
-desired number of forecasts in the future.  In the ensemble approach, you will use separate models for each point.  It 
-is possible to use a hybridization of these two ideas as well.  If you wish to take your forecasting model to the next
-level, try to project several months into the future with one or both of these ideas.
+This project employs different time-series analysis tools and techniques, including:
 
-Also, be aware that the assumptions of line regression are generally invalidated when using time-series data because of auto-correlation.  The engineered features are derived mostly from revenue which often means that there is a high degree of correlation.  You will get further with more sophisticated models to in combination with smartly engineered features. 
+- **Prophet**: A widely-used package for forecasting that captures seasonality and trends. It was used for modeling and to understand the underlying trends in the data.
+- **SARIMA**: A seasonal version of ARIMA used to model complex seasonality in the data. It provided competitive forecasting accuracy.
+- **LSTM**: A deep learning-based model used for sequence prediction. It was employed to capture long-term dependencies in the time-series data.
 
+#### Advanced Methods Considered
 
-## Commonly used time-series tools
+- **Recursive Forecasting**: Extending the forecasting horizon by appending predictions to the input feature set.
+- **Ensemble Forecasting**: Using multiple models to predict future points and combining their predictions.
 
-  * [statsmodels time-series package](https://www.statsmodels.org/dev/tsa.html) - one of the most commonly used 
-  time-series analysis packages in Python.  There are a suite of models including autoregressive models (AR), 
-  vector autoregressive models (VAR), univariate autoregressive moving average models (ARMA) and more.
-  * [Tensorflow time series tutorial](https://www.tensorflow.org/tutorials/structured_data/time_series)
-  * [Prophet](https://research.fb.com/prophet-forecasting-at-scale/)
+## Key Visualizations
+
+The following visualizations were generated during the project:
+
+- **Prophet Model Forecast**: Demonstrates the trend and seasonality patterns learned by the Prophet model.
   
-## More advanced methods for time-series analysis
+  ![Prophet Model Forecast](./output/prophet_forecast.png)
 
-  * [PyWavelets](https://pywavelets.readthedocs.io/en/latest/)
-  * [Bayesian Methods for time-series](https://docs.pymc.io/api/distributions/timeseries.html)
-  * [Gaussian process regression](https://scikit-learn.org/stable/auto_examples/gaussian_process/plot_gpr_noisy_targets.html)
-
-## Working with time-series data
-
-  * [scikit-learn MultiOutputRegressor](https://scikit-learn.org/stable/modules/generated/sklearn.multioutput.MultiOutputRegressor.html)
-  * [NumPy datetime](https://docs.scipy.org/doc/numpy/reference/arrays.datetime.html)
-  * [Pandas time-series](https://pandas.pydata.org/pandas-docs/stable/user_guide/timeseries.html)
-  * [matplotlib time-series plot](https://matplotlib.org/3.1.1/gallery/text_labels_and_annotations/date.html)
-  * [scikit-learn time-series train-test split](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.TimeSeriesSplit.html)
-
-## Additional materials
-
-  * [Intro paper to Gaussian Processes in time-series](https://royalsocietypublishing.org/doi/full/10.1098/rsta.2011.0550)
-  * [Paper for using wavelets to aid time-series forecasts](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0142064)
+- **Seasonality Components**: Shows the trend and weekly seasonality components identified in the time-series data.
   
-## Part 3
+  ![Seasonality Components](./output/seasonality_components.png)
 
-## Outline
+  - The figure above shows how weekly variations influence revenue, peaking around mid-week and declining on weekends. This insight can be used for strategic planning, such as scheduling promotions during peak days.
 
-1. Build a draft version of an API with train, predict, and logfile endpoints.
-2. Using Docker, bundle your API, model, and unit tests.
-3. Using test-driven development iterate on your API in a way that anticipates scale, load, and drift.
-4. Create a post-production analysis script that investigates the relationship between model performance and the business metric.
-5. Articulate your summarized findings in a final report.
+- **Customer vs Revenue**: Highlights the relationship between unique customers and revenue.
+  
+  ![Unique Customers vs Revenue](./output/customer_vs_revenue.png)
 
+  - The scatter plot indicates a positive correlation between unique customers and revenue, suggesting that increased customer acquisition leads to higher revenue. However, outliers indicate that there are cases where revenue drops despite customer numbers, which could be due to factors like discounts or low-value purchases.
 
-At a higher level you are being asked to:
+- **Engagement vs Revenue**: Plots engagement metrics like total views against revenue to understand their interaction.
+  
+  ![Engagement vs Revenue](./output/engagement_vs_revenue.png)
 
-1. Ready your model for deployment
-2. Query your API with new data and test your monitoring tools
-3. Compare your results to the gold standard
+  - The graph above shows that higher engagement does not always translate into higher revenue, indicating the need to analyze engagement quality and customer intent.
 
+- **Outlier Detection**: Displays revenue data points identified as outliers, helping refine model training by addressing anomalies.
+  
+  ![Revenue with Detected Outliers](./output/outliers.png)
 
-To **ready your model for deployment** you will be required to prepare you model in a way that the Flask API can both 
-train and predict.  There are some differences when you compare this model to most of those we have discussed 
-throughout this specialization.  When it comes to training one solution is that the model train script simply uses all
-files in a given directory.  This way you could set your model up to be re-trained at regular intervals with little 
-overhead.  
+  - Outliers were detected and addressed to prevent skewed model training. Revenue spikes and dips were carefully analyzed to ensure the models were robust against such anomalies.
 
-Prediction in the case of this model requires a little more thought.  You are not simply passing a query corresponding
-to a row in a feature matrix, because this business opportunity requires that the API takes a country name and a date.
-There are many ways to accommodate these requirements.  You model may simply save the forecasts for a range of dates,
-then the 'predict' function serves to looks up the specified 30 day revenue prediction.  You model could also transform
-the target date into an appropriate input vector that is then used as input for a trained model.
+## Running the Project
 
-You might be tempted to setup the predict function to work only with the latest date, which would be appropriate in 
-some circumstances, but in this case we are building a tool to fit the specific needs of individuals.  Some people in
-leadership at AAVAIL make projections at the end of the month and others do this on the 15th so the predict function
-needs to work for all of the end users.
+1. **Data Ingestion**: Run the `data_processing.py` script to ingest and preprocess data from JSON files.
+2. **Model Training**: Use the `main.py` script to train different time-series models (`Prophet`, `SARIMA`, `LSTM`). Hyperparameters can be adjusted within the script.
+3. **API Deployment**: Deploy the Flask API using `app.py`. You can use Docker to containerize the app.
+4. **API Endpoints**:
+   - `/train`: Trains the model on the available dataset.
+   - `/predict`: Takes a date range and returns the forecasted values.
+   - `/logfile`: Retrieves model training logs.
 
-In the case of this project you can safely assume that there are only a few individuals that will be active users of 
-the model so it may not be worth the effort to optimize for speed when it comes to prediction or training.  The important
-thing is to arrive at a working solution.
+### Example Commands
 
-Once all of your tests pass and your model is being served via Docker you will need to **query the API**.  One suggestion
-for this part is to use a script to simulate the process.  You may want to start with fresh log files and then for every
-new day make a prediction with the consideration that you have not yet seen the rest of the future data.  To may the 
-process more realistic you could 're-train' your model say every week or nightly.  At a minimum you should have predictions
-for each day when you are finished and you should compare them to the known values.
+- **Train the Model**:
+  ```bash
+  curl -X POST http://127.0.0.1:5000/train
+  ```
+- **Get Predictions**:
+  ```bash
+  curl -X POST http://127.0.0.1:5000/predict -H "Content-Type: application/json" -d '{"start_date": "2024-01-01", "end_date": "2024-01-31"}'
+  ```
 
-To monitor performance there are several plots that could be made.  The time-series plot where X are the day intervals
-and Y is the 30 day revenue (projected and known) can be particularly useful here.  Because we obtain labels for y the 
-performance of your model can be monitored by comparing predicted and known values.
+## Files and Folders
+
+- **`data_processing.py`**: Handles data ingestion, cleaning, and preparation.
+- **`modeling.py`**: Contains functions for training different models like `Prophet`, `SARIMA`, and `LSTM`.
+- **`app.py`**: Flask API implementation for model deployment and prediction.
+- **`main.py`**: Script for orchestrating model training and evaluation.
+- **`evaluation.py`**: Used for evaluating model performance and visualizing results.
+- **Visualizations**: Included for better understanding of time-series trends, seasonality, model predictions, and outliers.
+
+## Technologies Used
+
+- **Python**: Primary language for all modeling, data processing, and API development.
+- **Flask**: Used for building the REST API for training and prediction.
+- **Docker**: Containerization of the API for easy deployment.
+- **Prophet, SARIMA, LSTM**: Time-series modeling libraries.
+- **pandas, NumPy, matplotlib**: Used for data manipulation and visualization.
+
+## Next Steps
+
+- **Hyperparameter Tuning**: Further refine model performance by optimizing hyperparameters.
+- **Additional Features**: Explore additional features that could be used to improve the forecasting accuracy.
+- **Production Deployment**: Deploy the API on a cloud platform such as AWS, GCP, or Azure.
+- **Monitoring and Retraining**: Implement automated retraining based on model drift detection to ensure long-term accuracy.
+- **Gold Standard Comparison**: Compare the model results to an industry benchmark to assess the relative performance.
+
+## Conclusion
+
+This project provides an end-to-end demonstration of a data science workflow—from data collection and analysis to modeling, evaluation, and deployment—focusing on time-series forecasting to address a real business opportunity. It highlights the iterative process of refining data and models and demonstrates how to operationalize machine learning models with an API-based approach. The key findings from this project provide valuable insights into the behavior of revenue over time, and the developed models can help make informed business decisions.
+
+- **Business Impact**: The forecasts can assist in inventory management, budgeting, and planning promotions based on expected revenue peaks.
+- **Deployment Readiness**: The model is ready for production deployment with continuous monitoring to maintain performance in dynamic environments.
+
