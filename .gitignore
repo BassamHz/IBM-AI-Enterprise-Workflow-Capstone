@@ -1,0 +1,23 @@
+# Ignore the virtual environment folder
+venv/
+
+# Ignore cache and Python compiled files
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Ignore logs and output files
+*.log
+*.csv
+*.h5
+
+# Ignore sensitive information
+.env
+.DS_Store
+
+# Ignore IDE configuration files (optional)
+.vscode/
+.idea/
+
+# Ignore large output images and auto-generated plots (optional)
+*.png
